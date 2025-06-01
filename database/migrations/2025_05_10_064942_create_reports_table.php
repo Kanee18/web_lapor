@@ -12,14 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('reports', function (Blueprint $table) {
-            $table->id(); 
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); 
-            $table->string('title')->nullable(); 
-            $table->text('description'); 
-            $table->string('image_path'); 
-            $table->string('location_text')->nullable(); 
-            $table->string('status')->default('dilaporkan'); 
-            $table->timestamps(); 
+            $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('title')->nullable();
+            $table->string('category'); 
+            $table->text('description');
+            $table->string('image_path');
+            $table->string('location_text')->nullable();
+            $table->decimal('latitude', 10, 7); 
+            $table->decimal('longitude', 10, 7); 
+            $table->string('status')->default('dilaporkan');
+            $table->timestamps();
         });
     }
 

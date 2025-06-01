@@ -13,7 +13,7 @@
                         {{ __('Home') }}
                     </x-nav-link>
 
-                    <x-nav-link :href="route('laporan.index')" :active="request()->routeIs('laporan.index') || request()->routeIs('laporan.show')">
+                    <x-nav-link :href="route('laporan.index')" :active="request()->routeIs('laporan.index') || request()->routeIs('laporan.show')" class="use-page-transition">
                         {{ __('Lihat Laporan') }}
                     </x-nav-link>
 
@@ -90,7 +90,7 @@
                  {{ __('Lihat Laporan') }}
              </x-responsive-nav-link>
             @auth
-                <x-responsive-nav-link :href="route('laporan.create')" :active="request()->routeIs('laporan.create')">
+                <x-responsive-nav-link :href="route('laporan.bikinlapor')" :active="request()->routeIs('laporan.bikinlapor')">
                     {{ __('Buat Laporan') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">

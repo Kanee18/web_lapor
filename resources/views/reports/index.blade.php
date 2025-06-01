@@ -8,7 +8,6 @@
     <div class="py-6 bg-gray-100 dark:bg-gray-900">
         <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
 
-            {{-- Pesan Sukses --}}
             @if (session('success'))
                 <div class="mb-6 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 dark:bg-green-700/30 dark:text-green-300 dark:border-green-600 rounded-md shadow" role="alert">
                     <div class="flex">
@@ -21,8 +20,8 @@
                 </div>
             @endif
 
-            <div class="mb-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-                <div>
+            <div class="mb-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex-grow">
                     <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
                         Jelajahi Laporan Terkini
                     </h1>
@@ -30,17 +29,39 @@
                         Lihat laporan kerusakan pada peta interaktif dan daftar di samping.
                     </p>
                 </div>
-                
-                @auth
-                    <a href="{{ route('laporan.bikinlapor') }}" class="w-full sm:w-auto shrink-0 inline-flex items-center justify-center px-6 py-3 bg-primary border border-transparent rounded-lg font-semibold text-sm text-white uppercase tracking-widest hover:bg-primary-dark active:bg-primary-dark focus:outline-none focus:border-primary-dark focus:ring ring-primary-light disabled:opacity-25 transition ease-in-out duration-150 shadow-md hover:shadow-lg">
-                        Buat Laporan Baru
-                    </a>
-                @else
-                     <button x-data @click.prevent="$dispatch('open-login-modal')" 
-                        class="w-full sm:w-auto shrink-0 inline-flex items-center justify-center px-6 py-3 bg-primary border border-transparent rounded-lg font-semibold text-sm text-white uppercase tracking-widest hover:bg-primary-dark active:bg-primary-dark focus:outline-none focus:border-primary-dark focus:ring ring-primary-light disabled:opacity-25 transition ease-in-out duration-150 shadow-md hover:shadow-lg">
-                        Login untuk Buat Laporan
-                     </button>
-                @endauth
+
+                <div class="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto mt-4 md:mt-0">
+                    <form method="GET" action="{{ route('laporan.index') }}" class="flex items-center gap-x-2 w-full sm:w-auto">
+                        <label for="category_filter" class="sr-only">Filter Kategori</label>
+                        <select name="category" id="category_filter" onchange="this.form.submit()"
+                                class="block w-full sm:min-w-[180px] rounded-lg border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 dark:bg-slate-700 dark:text-gray-200 text-sm py-2.5">
+                            <option value="">Semua Kategori</option>
+                            <option value="infrastruktur" {{ request('category') == 'infrastruktur' ? 'selected' : '' }}>Infrastruktur</option>
+                            <option value="lingkungan" {{ request('category') == 'lingkungan' ? 'selected' : '' }}>Lingkungan</option>
+                            <option value="pelayanan_publik" {{ request('category') == 'pelayanan_publik' ? 'selected' : '' }}>Pelayanan Publik</option>
+                        </select>
+
+                        @if(request('category'))
+                            <a href="{{ route('laporan.index') }}" title="Reset Filter"
+                               class="p-2.5 text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary-light rounded-md focus:outline-none focus:ring-2 focus:ring-primary">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </a>
+                        @endif
+                    </form>
+
+                    @auth
+                        <a href="{{ route('laporan.bikinlapor') }}" class="w-full sm:w-auto shrink-0 inline-flex items-center justify-center px-6 py-3 bg-primary border border-transparent rounded-lg font-semibold text-sm text-white uppercase tracking-widest hover:bg-primary-dark active:bg-primary-dark focus:outline-none focus:border-primary-dark focus:ring ring-primary-light disabled:opacity-25 transition ease-in-out duration-150 shadow-md hover:shadow-lg">
+                            Buat Laporan Baru
+                        </a>
+                    @else
+                         <button x-data @click.prevent="$dispatch('open-login-modal')"
+                            class="w-full sm:w-auto shrink-0 inline-flex items-center justify-center px-6 py-3 bg-primary border border-transparent rounded-lg font-semibold text-sm text-white uppercase tracking-widest hover:bg-primary-dark active:bg-primary-dark focus:outline-none focus:border-primary-dark focus:ring ring-primary-light disabled:opacity-25 transition ease-in-out duration-150 shadow-md hover:shadow-lg">
+                            Login untuk Buat Laporan
+                         </button>
+                    @endauth
+                </div>
             </div>
 
             <div class="flex flex-col md:flex-row md:gap-x-6 lg:gap-x-8">
@@ -57,10 +78,12 @@
 
                 <div class="w-full md:w-3/5 lg:w-2/3">
                     @if($reports->count() > 0) 
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-3 gap-4">
                             @foreach ($reports as $report)
-                                <div id="report-card-{{ $report->id }}" class="report-card-item bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group cursor-pointer"
-                                     data-latitude="{{ $report->latitude ?? '' }}" data-longitude="{{ $report->longitude ?? '' }}">
+                                <div id="report-card-{{ $report->id }}"
+                                    class="report-card-item bg-white dark:bg-slate-800 rounded-xl shadow-lg group cursor-pointer
+                                            hover:shadow-xl hover:scale-[1.02] transition-all duration-300 ease-out flex flex-col overflow-hidden"  {{-- Perbarui kelas ini --}}
+                                    data-latitude="{{ $report->latitude ?? '' }}" data-longitude="{{ $report->longitude ?? '' }}">
                                     <a href="{{ route('laporan.show', $report->id) }}" class="block relative report-image-link">
                                         @if($report->image_path)
                                             <div class="aspect-w-16 aspect-h-9 bg-gray-200 dark:bg-slate-700">
@@ -121,7 +144,7 @@
                             </p>
                             <div class="mt-8">
                                 @auth
-                                    <a href="{{ route('laporan.create') }}" class="inline-flex items-center justify-center px-6 py-3 bg-primary border border-transparent rounded-lg font-semibold text-sm text-white uppercase tracking-widest hover:bg-primary-dark active:bg-primary-dark focus:outline-none focus:border-primary-dark focus:ring ring-primary-light disabled:opacity-25 transition ease-in-out duration-150 shadow-md hover:shadow-lg">
+                                    <a href="{{ route('laporan.bikinlapor') }}" class="inline-flex items-center justify-center px-6 py-3 bg-primary border border-transparent rounded-lg font-semibold text-sm text-white uppercase tracking-widest hover:bg-primary-dark active:bg-primary-dark focus:outline-none focus:border-primary-dark focus:ring ring-primary-light disabled:opacity-25 transition ease-in-out duration-150 shadow-md hover:shadow-lg">
                                         Buat Laporan Baru
                                     </a>
                                 @else

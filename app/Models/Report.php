@@ -21,14 +21,13 @@ class Report extends Model
     protected $fillable = [
         'user_id',
         'title',
+        'category',     
         'description',
         'image_path',
         'location_text',
+        'latitude',     
+        'longitude',    
         'status',
-        'location_text',
-        'latitude',   
-        'longitude',  
-        'status'
     ];
 
     /**

@@ -2,38 +2,46 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request; 
-use Illuminate\View\View; 
-use Illuminate\Http\RedirectResponse; 
-use Illuminate\Support\Facades\Auth; 
-use Illuminate\Support\Str;   
-use App\Models\Report; 
+use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use App\Models\Report;
 
 class ReportController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $reports = Report::with('user')
-                     ->whereNotNull(['latitude', 'longitude']) 
-                     ->latest()
-                     ->paginate(6); 
+        $selectedCategory = $request->query('category');
 
+        $reportsQuery = Report::with('user')
+                            ->whereNotNull(['latitude', 'longitude']); 
 
-                     return view('reports.index', compact('reports'));
+        if ($selectedCategory && in_array($selectedCategory, ['infrastruktur', 'lingkungan', 'pelayanan_publik'])) {
+            $reportsQuery->where('category', $selectedCategory);
+        }
+
+        $reports = $reportsQuery->latest()->paginate(6);
+
+        return view('reports.index', compact('reports'));
     }
 
-    public function create(): View 
+    public function create(): View
     {
         return view('reports.bikinlapor');
     }
+
+    
 
     public function store(Request $request): RedirectResponse
     {
         $validatedData = $request->validate([
             'title' => 'nullable|string|max:255',
+            'category' => 'required|string|in:infrastruktur,lingkungan,pelayanan_publik', 
             'description' => 'required|string',
             'location_text' => 'required|string|max:255',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', 
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'latitude' => 'required|numeric|between:-90,90',
             'longitude' => 'required|numeric|between:-180,180',
         ]);
@@ -50,6 +58,7 @@ class ReportController extends Controller
         Report::create([
             'user_id' => Auth::id(),
             'title' => $validatedData['title'],
+            'category' => $validatedData['category'], 
             'description' => $validatedData['description'],
             'location_text' => $validatedData['location_text'],
             'image_path' => $imagePath,
@@ -64,7 +73,6 @@ class ReportController extends Controller
     public function show(Report $report): View
     {
         $report->load(['user', 'comments.user']);
-
         return view('reports.show', compact('report'));
     }
 }

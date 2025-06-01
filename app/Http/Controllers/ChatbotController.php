@@ -50,16 +50,8 @@ class ChatbotController extends Controller
 
         $formattedHistory = $this->formatConversationHistoryForGemini($conversationHistoryFromFrontend);
 
-        // Bangun 'contents' untuk Gemini API dengan instruksi sistem, histori, dan pesan pengguna baru
         $contents = [
-            // Instruksi sistem sebagai pesan pertama dari 'user' jika model mendukung interpretasi ini sebagai konteks global
-            // Atau sebagai bagian dari pesan 'model' pertama jika itu cara yang lebih baik (perlu eksperimen/cek dok)
-            // Untuk Gemini, seringkali lebih baik instruksi sistem menjadi bagian dari pesan 'user' awal, atau
-            // jika model mendukungnya, sebagai pesan 'system' terpisah (jarang untuk Gemini API langsung via REST)
-            // Mari kita coba gabungkan dengan pesan user pertama jika histori kosong, atau sebagai pesan terpisah jika histori ada.
-
-            // Jika tidak ada histori, gabungkan instruksi sistem dengan pesan user pertama
-            // Jika ada histori, instruksi sistem bisa menjadi giliran 'user' pertama, lalu histori, lalu pesan user terakhir
+            
         ];
 
         if (empty($formattedHistory)) {

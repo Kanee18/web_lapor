@@ -22,6 +22,21 @@
                         </div>
 
                         <div class="mb-6">
+                            <label for="category" class="block font-medium text-sm text-gray-700 dark:text-gray-300 mb-1">{{ __('Kategori Laporan') }} <span class="text-red-500">*</span></label>
+                            <select name="category" id="category"
+                                    class="mt-1 block w-full rounded-lg border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 dark:bg-gray-700 dark:text-gray-200"
+                                    required>
+                                <option value="" disabled {{ old('category') ? '' : 'selected' }}>Pilih Kategori</option>
+                                <option value="infrastruktur" {{ old('category') == 'infrastruktur' ? 'selected' : '' }}>Infrastruktur</option>
+                                <option value="lingkungan" {{ old('category') == 'lingkungan' ? 'selected' : '' }}>Lingkungan</option>
+                                <option value="pelayanan_publik" {{ old('category') == 'pelayanan_publik' ? 'selected' : '' }}>Pelayanan Publik</option>
+                            </select>
+                            @error('category')
+                                <p class="text-sm text-red-600 dark:text-red-400 mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="mb-6">
                             <label for="description" class="block font-medium text-sm text-gray-700 dark:text-gray-300 mb-1">{{ __('Deskripsi Kerusakan') }} <span class="text-red-500">*</span></label>
                             <textarea name="description" id="description" rows="5"
                                       class="mt-1 block w-full rounded-lg border-gray-300 dark:border-gray-600 shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 dark:bg-gray-700 dark:text-gray-200"

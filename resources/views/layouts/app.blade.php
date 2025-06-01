@@ -72,7 +72,9 @@
             </svg>
         </div>
 
-        <div id="chatbot-popup" class="hidden fixed bottom-24 right-6 z-[9999] w-80 sm:w-96 h-[70vh] max-h-[500px] bg-white dark:bg-gray-800 rounded-xl shadow-2xl flex flex-col transition-all duration-300 ease-in-out transform translate-y-full opacity-0">
+        <div id="chatbot-popup"
+     class="hidden fixed bottom-24 right-6 z-[9999] w-80 sm:w-96 h-[70vh] max-h-[500px] bg-white dark:bg-gray-800 rounded-xl shadow-2xl flex flex-col
+            transition-all duration-300 ease-in-out transform translate-y-full opacity-0">
             {{-- Header Chatbot --}}
             <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-primary text-white rounded-t-xl">
                 <h3 class="text-lg font-semibold">Chat Bantuan</h3>
